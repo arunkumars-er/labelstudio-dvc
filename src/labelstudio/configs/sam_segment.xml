@@ -1,0 +1,39 @@
+<View>
+    <Image name="image" value="$image" zoom="true" zoomControl="true" rotateControl="true" brightnessControl="true" contrastControl="true"/>
+    <BrushLabels name="final_seg" toName="image" strokeWidth="3" opacity="0.7">
+        <Label value="worker" background="#e6194B"/>
+        <Label value="torque_wrench" background="#f58231"/>
+        <Label value="marker" background="#ffe119"/>
+        <Label value="motor_winding" background="#3cb44b"/>
+        <Label value="bolt1" background="#4363d8"/>
+        <Label value="bolt2" background="#911eb4"/>
+        <Label value="bolt3" background="#f032e6"/>
+        <Label value="bolt4" background="#808000"/>
+    </BrushLabels>
+
+    <KeyPointLabels name="sam_pos" toName="image" smart="true" showInline="true">
+        <Label value="worker" background="#e6194B"/>
+        <Label value="torque_wrench" background="#f58231"/>
+        <Label value="marker" background="#ffe119"/>
+        <Label value="motor_winding" background="#3cb44b"/>
+        <Label value="bolt1" background="#4363d8"/>
+        <Label value="bolt2" background="#911eb4"/>
+        <Label value="bolt3" background="#f032e6"/>
+        <Label value="bolt4" background="#808000"/>
+    </KeyPointLabels>
+
+    <KeyPointLabels name="sam_neg" toName="image" smart="true" showInline="true">
+        <Label value="background" background="#FF0000"/>
+    </KeyPointLabels>
+
+    <RectangleLabels name="sam_box" toName="image" strokeWidth="3" showInline="true">
+        <Label value="worker" background="#e6194B"/>
+        <Label value="torque_wrench" background="#f58231"/>
+        <Label value="marker" background="#ffe119"/>
+        <Label value="motor_winding" background="#3cb44b"/>
+        <Label value="bolt1" background="#4363d8"/>
+        <Label value="bolt2" background="#911eb4"/>
+        <Label value="bolt3" background="#f032e6"/>
+        <Label value="bolt4" background="#808000"/>
+    </RectangleLabels>
+</View>
