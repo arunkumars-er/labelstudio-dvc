@@ -36,7 +36,7 @@ for idx, task in enumerate(tasks):
 # --- Update Task ---
     client.tasks.update( id=task.id, meta=new_meta, data=new_data) 
     print(f"Assigned Task {task.id:<5} → {assigned_user}") 
-    print("\n✓ Finished assigning tasks\n")
+    print("\n Finished assigning tasks\n")
 # --------------------------------------------------
 # VERIFY ASSIGNMENTS
 # --------------------------------------------------
@@ -46,6 +46,6 @@ for task in tasks:
     meta_user = task.meta.get("assigned_to") if task.meta else None     
     data_user = task.data.get("assigned_to") if task.data else None 
     print(f"Task {task.id:<5} → meta: {meta_user}, data: {data_user}") 
-    print("\n✓ Verification complete")
+    print("\n Verification complete")
 
 

@@ -5,7 +5,7 @@ import os
 # CONFIG
 # -----------------------------
 LS_URL = "http://localhost:8080"
-API_KEY = "YOUR_API_KEY"  # <-- your token
+API_KEY = "YOUR_API_KEY"  
 PROJECT_ID = 25
 IMAGE_DIR = "/home/arun-er/Documents/ls_dvc/data/raw"
 OUTPUT_ZIP = f"/home/arun-er/Documents/ls_dvc/exports/project_{PROJECT_ID}_brush_coco.zip"
@@ -22,7 +22,7 @@ storage = client.import_storage.local.create(
     path=IMAGE_DIR,
     title="Local Raw Images",
     regex_filter=".*\\.(jpg|png|jpeg)$",
-    use_blob_urls=True     # CRITICAL → allows exporting actual image files
+    use_blob_urls=True     
 )
 
 print(f"Created Import Storage ID: {storage.id}")
@@ -54,8 +54,8 @@ os.makedirs(os.path.dirname(OUTPUT_ZIP), exist_ok=True)
 with open(OUTPUT_ZIP, "wb") as f:
     f.write(bytestream)
 
-print("\n✓ Export completed successfully!")
-print(f"✓ File saved → {OUTPUT_ZIP}")
+print("\n Export completed successfully!")
+print(f" File saved → {OUTPUT_ZIP}")
 
 # ------------------------------
 # OPTIONAL: VERIFY ZIP CONTENTS
@@ -73,8 +73,8 @@ with zipfile.ZipFile(OUTPUT_ZIP, "r") as zipf:
     print(f"Annotations found: {len(ann_files)}")
 
     if len(img_files) == 0:
-        print("❌ ERROR: No images exported — check import storage again.")
+        print(" ERROR: No images exported — check import storage again.")
     else:
-        print("✔ Images exported correctly.")
+        print(" Images exported correctly.")
 
 print("\n=== DONE ===\n")

@@ -349,7 +349,7 @@ def main():
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        print("Usage: python create_import.py /path/to/images")
+        print("Usage: python create_task.py /path/to/images")
         sys.exit(1)
     main()
 # python src/labelstudio/create_import.py data/raw/
