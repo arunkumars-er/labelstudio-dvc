@@ -7,6 +7,9 @@
 # assign_tasks_to_annotators.py
 # Run this anytime to split tasks between your 2 annotators
 from label_studio_sdk import LabelStudio 
+# --------------------------------------------------
+# CONFIG    
+# --------------------------------------------------
 LS_URL = "http://localhost:8080" 
 API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6ODA3MTkzOTkyNSwiaWF0IjoxNzY0NzM5OTI1LCJqdGkiOiJmZjljZTNmYzU0ODA0MzI5YTlkM2RiY2Q2YTMwOTcxZCIsInVzZXJfaWQiOiIyIn0.rLlywwxrA-2leLhEogT7vqwBUjoD9YzCJAYZ_B4DHeQ"
 PROJECT_ID = 7

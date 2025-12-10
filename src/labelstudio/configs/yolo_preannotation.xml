@@ -1,0 +1,38 @@
+<View>
+  <Image name="image1" value="$image"/>
+
+  <!-- Auto-labeling using best.pt -->
+  <RectangleLabels
+      name="labels"
+      toName="image1"
+      model_path="best.pt"
+      model_score_threshold="0.1">
+
+    <Label value="ac_asst"/>
+    <Label value="ac_control"/>
+    <Label value="ac_ctr_left"/>
+    <Label value="ac_ctr_right"/>
+    <Label value="ac_drvr"/>
+    <Label value="assy_module"/>
+    <Label value="bezel"/>
+    <Label value="bezel_switches"/>
+    <Label value="colps_steering"/>
+    <Label value="dashboard"/>
+    <Label value="duct"/>
+    <Label value="gar_glv_box_padding"/>
+    <Label value="garnish_ctr"/>
+    <Label value="hazard_switches"/>
+    <Label value="key"/>
+    <Label value="lights"/>
+    <Label value="push_button"/>
+    <Label value="screen"/>
+    <Label value="screen_garnish"/>
+    <Label value="screw_lwr"/>
+    <Label value="steering_coil"/>
+    <Label value="steering_cover"/>
+    <Label value="usb_aux"/>
+    <Label value="usb_aux_container"/>
+    <Label value="wiper"/>
+
+  </RectangleLabels>
+</View>

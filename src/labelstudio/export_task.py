@@ -1,80 +1,80 @@
-from label_studio_sdk import LabelStudio
+# src/labelstudio/export_to_yolo.py
+# The BEST Label Studio → YOLO export script (2025 edition)
+# Just run: python src/labelstudio/export_to_yolo.py
+
 import os
+import json
+import shutil
+import logging
+from tqdm import tqdm
+from label_studio_sdk import LabelStudio
+from label_studio_sdk.converter import Converter
+from label_studio_sdk._extensions.label_studio_tools.core.utils.io import get_local_path
 
-# -----------------------------
-# CONFIG
-# -----------------------------
-LS_URL = "http://localhost:8080"
-API_KEY = "YOUR_API_KEY"  
-PROJECT_ID = 25
-IMAGE_DIR = "/home/arun-er/Documents/ls_dvc/data/raw"
-OUTPUT_ZIP = f"/home/arun-er/Documents/ls_dvc/exports/project_{PROJECT_ID}_brush_coco.zip"
+# ========================= CONFIG (CHANGE ONCE) =========================
+LS_URL       = "http://localhost:8080"
+API_KEY      = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6ODA3MTkzOTkyNSwiaWF0IjoxNzY0NzM5OTI1LCJqdGkiOiJmZjljZTNmYzU0ODA0MzI5YTlkM2RiY2Q2YTMwOTcxZCIsInVzZXJfaWQiOiIyIn0.rLlywwxrA-2leLhEogT7vqwBUjoD9YzCJAYZ_B4DHeQ"
+PROJECT_ID   = 10
+OUTPUT_ROOT  = r"E:\MLOps\ls_dvc\data\exports\yolo_full"
+# ======================================================================
 
-# -----------------------------
-# INIT
-# -----------------------------
-client = LabelStudio(base_url=LS_URL, api_key=API_KEY)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+log = logging.getLogger(__name__)
 
-print("\n=== STEP 1: Create Import Storage ===")
+def export_yolo():
+    ls = LabelStudio(base_url=LS_URL, api_key=API_KEY)
+    project = ls.projects.get(id=PROJECT_ID)
+    log.info(f"Connected to project: {project.title}")
 
-storage = client.import_storage.local.create(
-    project=PROJECT_ID,
-    path=IMAGE_DIR,
-    title="Local Raw Images",
-    regex_filter=".*\\.(jpg|png|jpeg)$",
-    use_blob_urls=True     
-)
+    # 1. Create and download export snapshot
+    log.info("Creating export snapshot...")
+    export = ls.projects.exports.create(PROJECT_ID, title="YOLO Full Export")
+    while getattr(export, "status", "") == "in_progress":
+        time.sleep(3)
+        export = ls.projects.exports.get(id=PROJECT_ID, export_pk=export.id)
 
-print(f"Created Import Storage ID: {storage.id}")
+    data = ls.projects.exports.download(id=PROJECT_ID, export_pk=export.id, export_type="JSON")
+    snapshot_path = os.path.join(OUTPUT_ROOT, f"project_{PROJECT_ID}_snapshot.json")
+    os.makedirs(OUTPUT_ROOT, exist_ok=True)
+    
+    with open(snapshot_path, "wb") as f:
+        for chunk in data:
+            f.write(chunk)
+    
+    with open(snapshot_path) as f:
+        tasks = json.load(f)
+    log.info(f"Exported {len(tasks)} tasks → {snapshot_path}")
 
-print("\n=== STEP 2: Sync Import Storage (load images into LS backend) ===")
-sync_result = client.import_storage.local.sync(id=storage.id)
-print("Sync result:", sync_result)
+    # 2. Convert to YOLO format
+    log.info("Converting to YOLO format...")
+    converter = Converter(config=project.label_config, project_dir=OUTPUT_ROOT)
+    yolo_dir = os.path.join(OUTPUT_ROOT, "yolo_dataset")
+    converter.convert_to_yolo(snapshot_path, yolo_dir, is_dir=False)
+    log.info(f"YOLO labels ready → {yolo_dir}/labels/")
 
-print("\n=== STEP 3: Export Project in BRUSH_TO_COCO format ===")
-print("Available export formats:")
-formats = client.projects.exports.list_formats(id=PROJECT_ID)
-for f in formats:
-    print(" →", f)
+    # 3. Download all images
+    img_dir = os.path.join(yolo_dir, "images")
+    os.makedirs(img_dir, exist_ok=True)
+    log.info(f"Downloading {len(tasks)} images...")
 
-export_type = "BRUSH_TO_COCO"
+    for task in tqdm(tasks, desc="Images"):
+        url = next(iter(task["data"].values()))
+        try:
+            local_path = get_local_path(url, LS_URL, API_KEY, download_resources=True)
+            filename = os.path.basename(local_path).split("__", 1)[-1]
+            shutil.copy2(local_path, os.path.join(img_dir, filename))
+        except Exception as e:
+            log.warning(f"Failed {task['id']}: {e}")
 
-print(f"\nRequested export type: {export_type}")
+    log.info(f"COMPLETE! Full YOLO dataset ready:\n   → {yolo_dir}")
+    log.info(f"   Images : {len(os.listdir(img_dir))}")
+    log.info(f"   Labels : {len([f for f in os.listdir(os.path.join(yolo_dir, 'labels')) if f.endswith('.txt')])}")
 
-# Export as binary stream
-bytestream = client.projects.exports.as_binary(
-    project_id=PROJECT_ID,
-    export_type=export_type
-)
+    # Auto-version with DVC
+    os.system(f"dvc add {yolo_dir}")
+    log.info("Dataset versioned with DVC → run 'dvc push' to save")
 
-# Write ZIP file
-print(f"\nSaving export to: {OUTPUT_ZIP}")
-os.makedirs(os.path.dirname(OUTPUT_ZIP), exist_ok=True)
-
-with open(OUTPUT_ZIP, "wb") as f:
-    f.write(bytestream)
-
-print("\n Export completed successfully!")
-print(f" File saved → {OUTPUT_ZIP}")
-
-# ------------------------------
-# OPTIONAL: VERIFY ZIP CONTENTS
-# ------------------------------
-import zipfile
-
-print("\n=== STEP 4: Verify ZIP ===")
-with zipfile.ZipFile(OUTPUT_ZIP, "r") as zipf:
-    names = zipf.namelist()
-
-    img_files = [n for n in names if "images/" in n]
-    ann_files = [n for n in names if "annotations/" in n]
-
-    print(f"Images found: {len(img_files)}")
-    print(f"Annotations found: {len(ann_files)}")
-
-    if len(img_files) == 0:
-        print(" ERROR: No images exported — check import storage again.")
-    else:
-        print(" Images exported correctly.")
-
-print("\n=== DONE ===\n")
+if __name__ == "__main__":
+    import time
+    time.sleep(1)  # nice terminal spacing
+    export_yolo()
