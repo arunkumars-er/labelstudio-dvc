@@ -1,0 +1,11 @@
+
+<View>
+  <Image name="image1" value="$image"/>
+  <RectangleLabels name="label1" toName="image1" model_path="yolov8n.pt" model_score_threshold="0.1">
+    <Label value="bus" background="blue"/>
+  <Label value="train" background="#FFA39E"/></RectangleLabels>
+  <RectangleLabels name="label2" toName="image1" model_path="yolov8m.pt" model_score_threshold="0.1">
+    <Label value="bus" background="red"/>
+  <Label value="train" background="#D4380D"/></RectangleLabels>
+</View>
+

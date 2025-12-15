@@ -24,19 +24,19 @@ The goal is to close the loop between **model → annotation → retraining**.
 │   ├── exports/            # Label Studio exports
 │   └── processed/          # Processed / training-ready data
 ├── models/
-│   └── best.pt             # Trained model checkpoint
+│   └── best.pt             # model for active learning(improve model)  
 ├── src/
 │   └── labelstudio/
 │       ├── configs/
-│       │   ├── sam_segment.xml
-│       │   └── yolo_preannotation.xml
+│       │   ├── sam_segment.xml   # sam server(brush based RLE) Rectangle/keypoint label
+│       │   └── yolo_preannotation.xml # yolo server (RectangleLabels)
 │       ├── improve_model/
-│       │   └── pre_annotate.py
-│       ├── assign_task.py
-│       ├── create_task.py
-│       └── export_task.py
+│       │   └── pre_annotate.py # active learning (add images for batch and preannotate)
+│       ├── assign_task.py # use README inside here more detail
+│       ├── create_task.py 
+│       ├── export_task.py # use README inside here for more detail
+|       └── README.md
 ├── dvc.yaml
-├── requirements.in
 ├── requirements.txt
 └── README.md
 ```

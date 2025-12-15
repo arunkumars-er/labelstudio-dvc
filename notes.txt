@@ -20,15 +20,25 @@ BRUSH_TO_COCO
 CONLL2003 (disabled)
 ASR_MANIFEST (disabled)
 
+important is
 
-<View>
-  <Image name="image1" value="$image"/>
-  <RectangleLabels name="label1" toName="image1" model_path="yolov8n.pt" model_score_threshold="0.1">
-    <Label value="bus" background="blue"/>
-  <Label value="train" background="#FFA39E"/></RectangleLabels>
-  <RectangleLabels name="label2" toName="image1" model_path="yolov8m.pt" model_score_threshold="0.1">
-    <Label value="bus" background="red"/>
-  <Label value="train" background="#D4380D"/></RectangleLabels>
-</View>
+def make_ls_local_file_url(path: Path) -> str:
+    """
+    Convert a real filesystem path into a Label Studio local-file URL.
+    Example:
+        LOCAL_FILES_ROOT = "E:/MLOps"
+        file = "E:/MLOps/ls_dvc/data/raw/cat.jpg"
+        output = "/data/local-files/?d=ls_dvc/data/raw/cat.jpg"
+    """
+    absolute = path.resolve().as_posix()
 
+    if absolute.startswith(LOCAL_FILES_ROOT):
+        rel = absolute[len(LOCAL_FILES_ROOT):].lstrip("/")
+    else:
+        print(f"[WARNING] Path is outside LOCAL_FILES_ROOT: {absolute}")
+        rel = absolute
 
+    return f"/data/local-files/?d={LOCAL_FILES_ROOT}/{rel}"
+
+for linux works with rel path
+for windows works with abs path

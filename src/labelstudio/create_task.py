@@ -1,164 +1,4 @@
 
-# # create_import.py ← FINAL VERSION THAT WORKS 100%
-
-# import os
-# import sys
-# import argparse
-# from pathlib import Path
-# from label_studio_sdk import LabelStudio
-
-# # ==================== CONFIG ====================
-# LABEL_STUDIO_URL = "http://localhost:8080"
-# API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6ODA3MTkzOTkyNSwiaWF0IjoxNzY0NzM5OTI1LCJqdGkiOiJmZjljZTNmYzU0ODA0MzI5YTlkM2RiY2Q2YTMwOTcxZCIsInVzZXJfaWQiOiIyIn0.rLlywwxrA-2leLhEogT7vqwBUjoD9YzCJAYZ_B4DHeQ"
-# PROJECT_TITLE = "new"
-# DATA_KEY = "image"
-# LABEL_CONFIG_PATH = r"E:\MLOps\ls_dvc\src\labelstudio\configs\sam_segment.xml"
-# # ===============================================
-
-# client = LabelStudio(base_url=LABEL_STUDIO_URL, api_key=API_KEY)
-
-
-# def load_label_config(path: str) -> str:
-#     with open(path, "r") as f:
-#         return f.read()
-
-# LABEL_CONFIG = load_label_config(LABEL_CONFIG_PATH)
-
-# def find_or_create_project():
-#     print(f"Looking for project: '{PROJECT_TITLE}'...")
-#     projects = client.projects.list()
-
-#     for proj in projects:
-#         if proj.title == PROJECT_TITLE:
-#             print(f"Found existing project → ID = {proj.id}")
-#             return proj.id
-
-#     print("Creating new project...")
-#     project = client.projects.create(
-#         title=PROJECT_TITLE,
-#         label_config=LABEL_CONFIG,
-#         enable_empty_annotation=True,
-#         show_instruction=True,
-#         expert_instruction="Use SAM (click / Alt+click) → refine with Brush → Submit"
-#     )
-#     print(f"Project created! ID = {project.id}")
-#     return project.id
-
-
-# def import_images(folder_path, project_id):
-#     folder = Path(folder_path)
-#     if not folder.exists():
-#         print(f"Folder not found: {folder}")
-#         return
-
-#     supported = {"*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tiff", "*.webp"}
-#     images = []
-#     for pattern in supported:
-#         images.extend(folder.rglob(pattern))
-
-#     if not images:
-#         print("No images found!")
-#         return
-
-#     print(f"Found {len(images)} images → creating local-files URLs...")
-#     # document_root = os.getenv('LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT', '/home/arun-er').rstrip('/')
-#     document_root = os.getenv('LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT', 'E:/MLOps').rstrip('/')
-
-#     tasks = []
-#     for img_path in images:
-#         full_path = img_path.as_posix()
-#         print(full_path)
-
-#         if full_path.startswith(document_root):
-#             rel_path = full_path[len(document_root):].lstrip('/')
-#         else:
-#             rel_path = full_path.lstrip('/')
-
-#         # ls_url = f"/data/local-files/?d=Documents/ls_dvc/{img_path}"
-#         ls_url = f"/data/local-files/?d=ls_dvc/{img_path}"
-#         tasks.append({"data": {DATA_KEY: ls_url}})
-#         print(f"→ {ls_url}")
-
-#     print(f"Uploading {len(tasks)} tasks...")
-
-#     try:
-#         client.projects.import_tasks(id=project_id, request=tasks)
-#         print(f"SUCCESS! Imported {len(tasks)} images!")
-#     except Exception as e:
-#         print(f"Import failed: {e}")
-
-
-# def import_images_without_duplicates(folder_path, project_id):
-#     folder = Path(folder_path)
-
-#     supported = {"*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tiff", "*.webp"}
-#     new_files = []
-#     for pattern in supported:
-#         new_files.extend(folder.rglob(pattern))
-
-#     print(f"Found {len(new_files)} images in folder.")
-
-#     existing_tasks = list(client.tasks.list(project=project_id))
-#     existing_urls = set()
-
-#     for t in existing_tasks:
-#         if t.data and "image" in t.data:
-#             existing_urls.add(t.data["image"])
-
-#     print(f"Existing tasks in LS: {len(existing_urls)}")
-
-#     base = Path("E:/MLOps/ls_dvc").resolve().as_posix()
-
-#     tasks_to_import = []
-#     for img in new_files:
-#         img_posix = img.as_posix()
-#         img_url = f"/data/local-files/?d=E:/MLOps/ls_dvc/{img_posix}"
-#         print(f"Processing: {img_url}")
-#         if img_url in existing_urls:
-#             print(f"Skipping duplicate: {img_url}")
-#             continue
-#         tasks_to_import.append({"data": {"image": img_url}})
-
-#     if not tasks_to_import:
-#         print("No new images to import! All are duplicates.")
-#         return
-
-#     print(f"Importing {len(tasks_to_import)} new images...")
-#     client.projects.import_tasks(id=project_id, request=tasks_to_import)
-#     print("✓ Import completed without duplicates.")
-
-
-# def main():
-#     parser = argparse.ArgumentParser(description="Create project + import images (WORKS 100%)")
-#     parser.add_argument("folder", help="Path to folder with images")
-#     parser.add_argument("--url", default=LABEL_STUDIO_URL, help="Label Studio URL")
-#     parser.add_argument("--key", default=API_KEY, help="API key")
-#     args = parser.parse_args()
-
-#     global client
-#     client = LabelStudio(base_url=args.url, api_key=args.key)
-
-#     project_id = find_or_create_project()
-
-#     # import_images(args.folder, project_id)
-#     import_images_without_duplicates(args.folder, project_id)
-
-#     print("\n" + "="*80)
-#     print("ALL DONE! Your project is ready and images WILL load:")
-#     print(f"→ {args.url}/projects/{project_id}/data")
-#     print("="*80)
-#     print("Your annotators can start labeling NOW!")
-
-
-# if __name__ == "__main__":
-#     if len(sys.argv) == 1:
-#         print("Usage: python create_import.py /path/to/images")
-#         sys.exit(1)
-#     main()
-
-# # python src/labelstudio/create_import.py data/raw/
-
-
 import os
 import sys
 import argparse
@@ -232,7 +72,7 @@ def make_ls_local_file_url(path: Path) -> str:
         print(f"[WARNING] Path is outside LOCAL_FILES_ROOT: {absolute}")
         rel = absolute
 
-    return f"/data/local-files/?d=E:/MLOps/{rel}"
+    return f"/data/local-files/?d={LOCAL_FILES_ROOT}/{rel}"
 
 
 # ==================================================
@@ -316,7 +156,7 @@ def main():
     parser.add_argument("--key", help="API key", default="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6ODA3MTkzOTkyNSwiaWF0IjoxNzY0NzM5OTI1LCJqdGkiOiJmZjljZTNmYzU0ODA0MzI5YTlkM2RiY2Q2YTMwOTcxZCIsInVzZXJfaWQiOiIyIn0.rLlywwxrA-2leLhEogT7vqwBUjoD9YzCJAYZ_B4DHeQ")
     parser.add_argument("--project", help="Project name")
     parser.add_argument("--config", help="Label config XML file")
-    parser.add_argument("--root", help="Local files root")
+    parser.add_argument("--root", help="Local files root", default="E:/MLOps")
     args = parser.parse_args()
 
     global LABEL_STUDIO_URL, API_KEY, PROJECT_TITLE, LABEL_CONFIG_PATH, LOCAL_FILES_ROOT

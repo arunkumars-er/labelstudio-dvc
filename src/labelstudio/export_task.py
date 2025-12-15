@@ -1,5 +1,4 @@
-# src/labelstudio/export_to_yolo.py
-# The BEST Label Studio → YOLO export script (2025 edition)
+# Label Studio → YOLO export script
 # Just run: python src/labelstudio/export_to_yolo.py
 
 import os
@@ -15,7 +14,7 @@ from label_studio_sdk._extensions.label_studio_tools.core.utils.io import get_lo
 LS_URL       = "http://localhost:8080"
 API_KEY      = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6ODA3MTkzOTkyNSwiaWF0IjoxNzY0NzM5OTI1LCJqdGkiOiJmZjljZTNmYzU0ODA0MzI5YTlkM2RiY2Q2YTMwOTcxZCIsInVzZXJfaWQiOiIyIn0.rLlywwxrA-2leLhEogT7vqwBUjoD9YzCJAYZ_B4DHeQ"
 PROJECT_ID   = 10
-OUTPUT_ROOT  = r"E:\MLOps\ls_dvc\data\exports\yolo_full"
+OUTPUT_ROOT  = r"E:\MLOps\ls_dvc\data\exports"
 # ======================================================================
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")

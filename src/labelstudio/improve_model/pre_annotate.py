@@ -12,13 +12,13 @@ API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIs
 PROJECT_ID = 10
 
 # Your fine-tuned model
-MODEL_PATH = r"E:\MLOps\ls_dvc\models\best.pt"  # ← This is the one in your XML
+MODEL_PATH = r"E:\MLOps\ls_dvc\models\best.pt"  
 
-# Thresholds (same as your XML)
-YOLO_CONF_THRESHOLD = 0.1      # model_score_threshold="0.1" in XML
+# Thresholds 
+YOLO_CONF_THRESHOLD = 0.1      # model_score_threshold="0.1" 
 MIN_SCORE_TO_SHOW = 0.1        # Same as above
 
-# Your 25 exact class names (must match <Label value="..."/> in XML)
+# Your 25 exact class names 
 LS_CLASSES = [
     "ac_asst", "ac_control", "ac_ctr_left", "ac_ctr_right", "ac_drvr",
     "assy_module", "bezel", "bezel_switches", "colps_steering", "dashboard",
@@ -79,8 +79,8 @@ def pre_annotate_folder(
                     x_center, y_center, width, height = boxes.xywhn[i].tolist()
 
                     region = {
-                        "from_name": "labels",           # ← MUST match name="labels" in XML
-                        "to_name": "image1",             # ← MUST match toName="image1" in XML
+                        "from_name": "labels",           
+                        "to_name": "image1",             
                         "type": "rectanglelabels",
                         "value": {
                             "x": (x_center - width / 2) * 100,
