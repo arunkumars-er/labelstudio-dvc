@@ -4,15 +4,7 @@ This script automates **creating or reusing a Label Studio project** and **impor
 
 ---
 
-## Supported Image Formats
-
-```
-.jpg  .jpeg  .png  .bmp  .tiff  .webp
-```
-
----
-
-## Label Studio Configuration (IMPORTANT)
+### Label Studio Configuration 
 
 Label Studio **must** be configured to allow local files.
 
@@ -29,7 +21,7 @@ start label-studio
 
 ---
 
-## Environment Variables 
+### Environment Variables 
 - `LABEL_STUDIO_URL` (default: `http://localhost:8080`)
 - `LABEL_STUDIO_API_KEY` (**required**)
 - `LS_PROJECT_NAME` (default: `default_project`)
@@ -38,7 +30,7 @@ start label-studio
 - `LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT` (**required**)
 ---
 
-## Folder Structure Example
+### Folder Structure Example
 
 ```
 E:/MLOps/
@@ -55,9 +47,7 @@ E:/MLOps/
 
 ---
 
-## Usage
-
-### Basic usage
+### Usage
 
 ```bash
 python src/labelstudio/create_import.py data/raw/
@@ -65,7 +55,7 @@ python src/labelstudio/create_import.py data/raw/
 
 ---
 
-## Command-Line Arguments
+### Command-Line Arguments
 
 | Argument    | Description                          |
 | ----------- | ------------------------------------ |
@@ -89,7 +79,7 @@ python create_import.py data/raw \
 
 ---
 
-## Local File URL Format
+### Local File URL Format
 
 Images are referenced like this:
 
@@ -118,7 +108,7 @@ This script exports **fully annotated Label Studio projects** into a **ready-to-
 
 ---
 
-## What This Script Does
+### What This Script Does
 
 1. Connects to Label Studio
 2. Creates an **export snapshot** of the project
@@ -136,7 +126,7 @@ This script exports **fully annotated Label Studio projects** into a **ready-to-
 
 ---
 
-## Configuration (Edit Once)
+### Configuration
 
 Edit these  env variables at the top of the file:
 
@@ -156,7 +146,7 @@ OUTPUT_ROOT = r"E:\MLOps\ls_dvc\data\exports\yolo_full"
 
 ---
 
-## Usage
+### Usage
 
 From project root:
 
@@ -165,7 +155,7 @@ python src/labelstudio/export_to_yolo.py
 ```
 ---
 
-## Output Structure
+### Output Structure
 
 ```
 yolo_full/
@@ -184,7 +174,7 @@ yolo_full/
 
 ---
 
-## Label Format (YOLO)
+### Label Format (YOLO)
 
 Each label file contains:
 
@@ -198,7 +188,7 @@ Class IDs are derived from the order of labels in your **Label Studio config XML
 
 ---
 
-## Image Download Logic
+### Image Download Logic
 
 * Images are resolved via `get_local_path`
 * Works with:
@@ -210,7 +200,7 @@ Class IDs are derived from the order of labels in your **Label Studio config XML
 * Cached images are reused when possible
 
 ---
-## Export Format Available here
+### Export Format Available here
 ```md
 - JSON
 - JSON_MIN

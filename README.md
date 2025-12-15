@@ -6,8 +6,8 @@
 
 This repository implements **two reproducible pipelines** using **Label Studio SDK** and **DVC**:
 
-1. **Pre-annotation & Task Creation Pipeline**
-2. **Annotation Export & Model Improvement Pipeline**
+1. **Pre-annotation & Model Improvement Pipeline**
+2. **Task Creation Pipeline & Annotation Export**
 
 The goal is to close the loop between **model → annotation → retraining**.
 
@@ -46,7 +46,7 @@ The goal is to close the loop between **model → annotation → retraining**.
 
 ---
 
-##  Pipeline 1: Pre-annotation & Task Creation
+##  Pipeline 1: Pre-annotation & Model Improvement Pipeline
 
 **Purpose:**
 Automatically pre-annotate raw data using an ML model and push tasks to Label Studio.
@@ -87,7 +87,7 @@ Raw Data → active learing(pre_annotate) → export task → train model → lo
 
 ---
 
-##  Pipeline 2: Annotation Export & Model Improvement
+##  Pipeline 2: Task Creation Pipeline & Annotation Export
 
 **Purpose:**
 Takes all images in raw/ and creates task and also assings the task with account available in labelstudio server.
