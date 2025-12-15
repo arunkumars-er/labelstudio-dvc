@@ -29,16 +29,13 @@ start label-studio
 
 ---
 
-## Environment Variables (Optional)
-
-
-| `LABEL_STUDIO_URL`  | Label Studio URL   | `http://localhost:8080` |
-| `LABEL_STUDIO_API_KEY`  | API key    | **Required**            |
-| `LS_PROJECT_NAME`  | Project title  | `default_project`       |
-| `LS_DATA_KEY`      | Task data key         | `image`                 |
-| `LS_LABEL_CONFIG`   | Label config XML path | `sam_segment.xml`       |
-| `LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT` | Local files root | **Required**    |
-
+## Environment Variables 
+- `LABEL_STUDIO_URL` (default: `http://localhost:8080`)
+- `LABEL_STUDIO_API_KEY` (**required**)
+- `LS_PROJECT_NAME` (default: `default_project`)
+- `LS_DATA_KEY` (default: `image`)
+- `LS_LABEL_CONFIG` (default: `sam_segment.xml`)
+- `LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT` (**required**)
 ---
 
 ## Folder Structure Example
@@ -75,7 +72,7 @@ python src/labelstudio/create_import.py data/raw/
 | `folder`    | Folder containing images (recursive) |
 | `--url`     | Label Studio URL                     |
 | `--key`     | Label Studio API key                 |
-| `--project` | Project name     (new or existing)   | <-- change to project id in future
+| `--project` | Project name     (new or existing)   | 
 | `--config`  | Label config XML file                |
 | `--root`    | Local files root                     |
 
@@ -111,9 +108,7 @@ After completion:
 http://localhost:8080/projects/<project_id>/data
 ```
 
----
-Below is a **matching, high-quality README.md** for `export_to_yolo.py`, written in the same style and depth as the importer README.
-It documents **what the script does, how it works, how to run it, and how to avoid common failures**.
+
 
 ---
 
@@ -143,7 +138,7 @@ This script exports **fully annotated Label Studio projects** into a **ready-to-
 
 ## Configuration (Edit Once)
 
-Edit these variables at the top of the file:
+Edit these  env variables at the top of the file:
 
 ```python
 LS_URL      = "http://localhost:8080"
