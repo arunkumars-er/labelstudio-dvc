@@ -127,7 +127,7 @@ DVC is used to:
 
 * Track datasets (`data/`)
 * Track model artifacts (`models/`)
-* Reproduce pipelines
+* Reproduce pipelines (if needed)
 
 
 ---
