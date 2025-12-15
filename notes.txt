@@ -1,0 +1,34 @@
+# export LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED=true
+# export LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT=E:/MLOps
+# label-studio start
+
+exort types:
+JSON
+JSON_MIN
+CSV
+TSV
+COCO
+COCO_WITH_IMAGES
+VOC
+YOLO
+YOLO_WITH_IMAGES
+YOLO_OBB
+YOLO_OBB_WITH_IMAGES
+BRUSH_TO_NUMPY
+BRUSH_TO_PNG
+BRUSH_TO_COCO
+CONLL2003 (disabled)
+ASR_MANIFEST (disabled)
+
+
+<View>
+  <Image name="image1" value="$image"/>
+  <RectangleLabels name="label1" toName="image1" model_path="yolov8n.pt" model_score_threshold="0.1">
+    <Label value="bus" background="blue"/>
+  <Label value="train" background="#FFA39E"/></RectangleLabels>
+  <RectangleLabels name="label2" toName="image1" model_path="yolov8m.pt" model_score_threshold="0.1">
+    <Label value="bus" background="red"/>
+  <Label value="train" background="#D4380D"/></RectangleLabels>
+</View>
+
+
